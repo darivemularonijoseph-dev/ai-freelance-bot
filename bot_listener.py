@@ -1,15 +1,36 @@
 """
-Telegram Two-Way Bot Listener Daemon
-Listens for commands and messages from the user on Telegram and responds interactively.
+Telegram Two-Way Bot Listener Daemon (with HTTP Health Server for Free Cloud Hosting)
+Listens for Telegram commands while exposing an HTTP port for Render/Cloud free tier.
 """
 
 import time
 import requests
 import json
 import os
+import threading
+from http.server import HTTPServer, BaseHTTPRequestHandler
 from proposal_generator import generate_upwork_proposal, generate_dm_outreach, answer_ai_question
 import telegram_notifier
 
+# --- Lightweight HTTP Health Server for Render Free Tier ---
+class HealthCheckHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.send_header("Content-type", "text/plain; charset=utf-8")
+        self.end_headers()
+        self.wfile.write(b"Antigravity AI Telegram Bot is Running 24/7!")
+
+    def log_message(self, format, *args):
+        # Silence HTTP access logs to keep terminal clean
+        return
+
+def run_http_server():
+    port = int(os.environ.get("PORT", 8080))
+    server = HTTPServer(("0.0.0.0", port), HealthCheckHandler)
+    print(f"[INFO] HTTP Health Server listening on port {port}...")
+    server.serve_forever()
+
+# --- Telegram Bot Core Logic ---
 def get_updates(offset=None):
     config = telegram_notifier.load_config()
     token = config.get("bot_token")
@@ -44,10 +65,10 @@ def handle_message(text: str, chat_id: int):
 
     if text_clean.startswith("/status"):
         reply = (
-            "✅ *System Status: 24/7 Active*\n\n"
+            "✅ *Cloud Status: 24/7 Active (Free Tier)*\n\n"
             "• Bot Token: Connected\n"
             "• Chat ID: Verified (8856823322)\n"
-            "• Mode: Two-way Telegram Daemon\n"
+            "• Web Server: Healthy\n"
             "• Target: $1,000 Upwork Milestone"
         )
         telegram_notifier.send_message(reply, chat_id=chat_id)
@@ -106,4 +127,9 @@ def run_daemon():
             time.sleep(5)
 
 if __name__ == "__main__":
+    # Start HTTP server in a daemon thread so cloud hosts (Render/Koyeb) can check health on $PORT
+    http_thread = threading.Thread(target=run_http_server, daemon=True)
+    http_thread.start()
+    
+    # Run Telegram bot loop on the main thread
     run_daemon()
