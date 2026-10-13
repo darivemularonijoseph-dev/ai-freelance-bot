@@ -1,0 +1,13 @@
+services:
+  - type: worker
+    name: ai-freelance-telegram-bot
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python bot_listener.py
+    envVars:
+      - key: BOT_TOKEN
+        value: 8725679037:AAFDFl8xDz9WeZiA_Jdozb9rAZQ37WSRKI4
+      - key: CHAT_ID
+        value: "8856823322"
+      - key: GEMINI_API_KEY
+        sync: false
