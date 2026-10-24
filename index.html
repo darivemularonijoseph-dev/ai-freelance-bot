@@ -773,6 +773,16 @@
 <body>
 
   <div class="app-container">
+    <!-- Mode Switcher: Voice vs WhatsApp -->
+    <div style="height: 38px; background: #080c14; border-bottom: 1px solid rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: space-around; padding: 0 16px; font-size: 12px; font-weight: 600; z-index: 40;">
+      <a href="/" style="color: #a5b4fc; background: rgba(99,102,241,0.2); padding: 5px 12px; border-radius: 12px; text-decoration: none; display: flex; align-items: center; gap: 5px;">
+        <span>📞</span> Voice Agent
+      </a>
+      <a href="/whatsapp" style="color: #34d399; background: rgba(16,185,129,0.1); padding: 5px 12px; border-radius: 12px; text-decoration: none; display: flex; align-items: center; gap: 5px;">
+        <span>💬</span> WhatsApp Bot
+      </a>
+    </div>
+
     <!-- Top Action Bar (QR Share for Client) -->
     <div class="top-action-bar">
       <button class="share-phone-btn" id="openQrBtn" onclick="toggleQrModal(true)">
