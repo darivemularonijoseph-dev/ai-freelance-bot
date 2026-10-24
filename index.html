@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>AutomateHyd | Telugu AI Voice Agent Demo</title>
+  <!-- Google Fonts: Inter & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Noto+Sans+Telugu:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-dark: #07090e;
+      --bg-card: rgba(18, 24, 38, 0.85);
+      --bg-card-border: rgba(255, 255, 255, 0.08);
+      --primary: #6366f1;
+      --primary-glow: rgba(99, 102, 241, 0.35);
+      --accent-green: #10b981;
+      --accent-green-glow: rgba(16, 185, 129, 0.4);
+      --accent-red: #ef4444;
+      --accent-cyan: #06b6d4;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-sub: #64748b;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 20% 15%, rgba(99, 102, 241, 0.15) 0%, transparent 45%),
+        radial-gradient(circle at 80% 85%, rgba(6, 182, 212, 0.12) 0%, transparent 45%);
+    }
+
+    .telugu-font {
+      font-family: 'Noto Sans Telugu', 'Outfit', sans-serif;
+    }
+
+    /* Outer Wrapper for Desktop & Mobile */
+    .app-container {
+      width: 100%;
+      max-width: 440px;
+      height: 100vh;
+      max-height: 880px;
+      background: #0d121d;
+      border: 1px solid var(--bg-card-border);
+      border-radius: 36px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 40px rgba(99, 102, 241, 0.15);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+
+    @media (max-width: 480px) {
+      .app-container {
+        max-width: 100%;
+        height: 100vh;
+        max-height: 100vh;
+        border-radius: 0;
+        border: none;
+      }
+    }
+
+    /* Phone Status Bar */
+    .status-bar {
+      height: 48px;
+      padding: 0 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      z-index: 20;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .status-time {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .notch-pill {
+      background: #05070a;
+      padding: 4px 10px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 10px;
+      color: var(--accent-green);
+      letter-spacing: 0.5px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .share-phone-btn {
+      background: rgba(99, 102, 241, 0.2);
+      border: 1px solid rgba(99, 102, 241, 0.4);
+      color: #c7d2fe;
+      border-radius: 12px;
+      padding: 5px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s ease;
+    }
+
+    .share-phone-btn:hover {
+      background: var(--primary);
+      color: white;
+    }
+
+    .live-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent-green);
+      animation: pulse-dot 1.5s infinite;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.8); }
+    }
+
+    /* Screen Views */
+    .screen {
+      flex: 1;
+      display: none;
+      flex-direction: column;
+      padding: 20px 24px;
+      position: relative;
+      overflow-y: auto;
+      z-index: 10;
+    }
+
+    .screen.active {
+      display: flex;
+    }
+
+    /* --- SCREEN 1: INCOMING CALL --- */
+    .incoming-screen {
+      justify-content: space-between;
+      align-items: center;
+      text-align: center;
+      padding: 40px 24px 60px;
+    }
+
+    .caller-header {
+      margin-top: 20px;
+    }
+
+    .agency-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      background: rgba(99, 102, 241, 0.15);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #a5b4fc;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .caller-title {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 6px;
+    }
+
+    .caller-subtitle {
+      font-size: 15px;
+      color: var(--accent-cyan);
+      font-weight: 500;
+    }
+
+    .caller-phone {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .avatar-wrapper {
+      position: relative;
+      width: 140px;
+      height: 140px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 30px auto;
+    }
+
+    .avatar-ring {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 2px solid var(--accent-green);
+      opacity: 0.6;
+      animation: ripple 2s infinite ease-out;
+    }
+
+    .avatar-ring:nth-child(2) {
+      animation-delay: 0.6s;
+    }
+
+    .avatar-ring:nth-child(3) {
+      animation-delay: 1.2s;
+    }
+
+    @keyframes ripple {
+      0% { transform: scale(0.9); opacity: 0.8; }
+      100% { transform: scale(1.6); opacity: 0; }
+    }
+
+    .avatar-img {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #1e293b, #334155);
+      border: 3px solid rgba(255, 255, 255, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 46px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      z-index: 2;
+    }
+
+    .call-meta-box {
+      background: var(--bg-card);
+      border: 1px solid var(--bg-card-border);
+      border-radius: 16px;
+      padding: 14px;
+      width: 100%;
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .call-meta-box strong {
+      color: var(--text-main);
+    }
+
+    .call-actions-row {
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      margin-top: 30px;
+    }
+
+    .call-btn {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      border: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 26px;
+      color: white;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+
+    .call-btn-accept {
+      background: linear-gradient(135deg, #10b981, #059669);
+      box-shadow: 0 8px 25px var(--accent-green-glow);
+    }
+
+    .call-btn-accept:hover {
+      transform: scale(1.08);
+      box-shadow: 0 12px 30px rgba(16, 185, 129, 0.6);
+    }
+
+    .call-btn-decline {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      box-shadow: 0 8px 25px rgba(239, 68, 68, 0.35);
+    }
+
+    .call-btn-decline:hover {
+      transform: scale(1.08);
+    }
+
+    .btn-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-top: 8px;
+    }
+
+    /* --- SCREEN 2: ACTIVE CALL --- */
+    .incall-screen {
+      justify-content: space-between;
+      padding: 16px 20px 24px;
+    }
+
+    .incall-top {
+      text-align: center;
+    }
+
+    .incall-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--accent-green);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .incall-timer {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin: 4px 0 2px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .incall-voice-badge {
+      font-size: 12px;
+      color: var(--accent-cyan);
+      background: rgba(6, 182, 212, 0.1);
+      padding: 3px 10px;
+      border-radius: 12px;
+      display: inline-block;
+    }
+
+    /* Soundwave Equalizer */
+    .soundwave-box {
+      height: 48px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 4px;
+      margin: 12px 0;
+    }
+
+    .soundwave-bar {
+      width: 4px;
+      height: 8px;
+      background: #6366f1;
+      border-radius: 3px;
+      transition: height 0.1s ease;
+    }
+
+    .soundwave-box.active .soundwave-bar {
+      background: linear-gradient(to top, #10b981, #06b6d4);
+      animation: soundwave-anim 0.8s ease-in-out infinite alternate;
+    }
+
+    .soundwave-box.active .soundwave-bar:nth-child(1) { animation-delay: 0.1s; }
+    .soundwave-box.active .soundwave-bar:nth-child(2) { animation-delay: 0.3s; }
+    .soundwave-box.active .soundwave-bar:nth-child(3) { animation-delay: 0.15s; }
+    .soundwave-box.active .soundwave-bar:nth-child(4) { animation-delay: 0.4s; }
+    .soundwave-box.active .soundwave-bar:nth-child(5) { animation-delay: 0.25s; }
+    .soundwave-box.active .soundwave-bar:nth-child(6) { animation-delay: 0.5s; }
+    .soundwave-box.active .soundwave-bar:nth-child(7) { animation-delay: 0.2s; }
+    .soundwave-box.active .soundwave-bar:nth-child(8) { animation-delay: 0.35s; }
+    .soundwave-box.active .soundwave-bar:nth-child(9) { animation-delay: 0.12s; }
+    .soundwave-box.active .soundwave-bar:nth-child(10) { animation-delay: 0.45s; }
+
+    @keyframes soundwave-anim {
+      0% { height: 6px; }
+      100% { height: 42px; }
+    }
+
+    /* Live Transcript Bubble */
+    .transcript-card {
+      background: var(--bg-card);
+      border: 1px solid var(--bg-card-border);
+      border-radius: 18px;
+      padding: 16px;
+      margin: 8px 0;
+      flex: 1;
+      max-height: 220px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      backdrop-filter: blur(12px);
+    }
+
+    .msg-bubble {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .msg-agent {
+      align-self: flex-start;
+      max-width: 95%;
+    }
+
+    .msg-user {
+      align-self: flex-end;
+      max-width: 90%;
+      text-align: right;
+    }
+
+    .msg-header {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .msg-user .msg-header {
+      justify-content: flex-end;
+      color: var(--accent-cyan);
+    }
+
+    .msg-content-telugu {
+      background: rgba(99, 102, 241, 0.15);
+      border: 1px solid rgba(99, 102, 241, 0.25);
+      border-radius: 14px 14px 14px 2px;
+      padding: 10px 12px;
+      font-size: 14px;
+      line-height: 1.5;
+      color: #f1f5f9;
+      font-weight: 500;
+    }
+
+    .msg-user .msg-content-telugu {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: rgba(16, 185, 129, 0.3);
+      border-radius: 14px 14px 2px 14px;
+      color: #ecfdf5;
+    }
+
+    .msg-content-en {
+      font-size: 12px;
+      color: var(--text-muted);
+      padding: 0 4px;
+      font-style: italic;
+    }
+
+    /* Live HUD Lead Intelligence Pill */
+    .lead-hud {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin: 8px 0;
+    }
+
+    .hud-stat {
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 8px;
+      text-align: center;
+    }
+
+    .hud-label {
+      font-size: 10px;
+      color: var(--text-sub);
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .hud-val {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--accent-cyan);
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* One-Tap Prompt Chips for Fast Client Demo */
+    .prompts-container {
+      margin-top: 6px;
+    }
+
+    .prompts-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-sub);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .prompts-scroll {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: none;
+    }
+
+    .prompts-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    .prompt-chip {
+      background: rgba(30, 41, 59, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 8px 14px;
+      font-size: 12px;
+      color: var(--text-main);
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .prompt-chip:hover, .prompt-chip:active {
+      background: var(--primary);
+      border-color: #818cf8;
+      transform: translateY(-1px);
+    }
+
+    /* In-Call Controls */
+    .incall-controls {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      margin-top: 14px;
+    }
+
+    .mini-control-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(30, 41, 59, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .mini-control-btn.active {
+      background: var(--primary);
+      color: white;
+    }
+
+    .hangup-btn {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      border: none;
+      color: white;
+      font-size: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+      transition: transform 0.2s ease;
+    }
+
+    .hangup-btn:hover {
+      transform: scale(1.06);
+    }
+
+    /* --- SCREEN 3: LEAD QUALIFIED DOSSIER --- */
+    .lead-screen {
+      padding: 24px 20px;
+      justify-content: space-between;
+      text-align: center;
+    }
+
+    .lead-badge-big {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: rgba(16, 185, 129, 0.15);
+      border: 2px solid var(--accent-green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 34px;
+      margin: 10px auto 14px;
+    }
+
+    .lead-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 4px;
+    }
+
+    .lead-subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+
+    .lead-card {
+      background: var(--bg-card);
+      border: 1px solid var(--bg-card-border);
+      border-radius: 18px;
+      padding: 16px;
+      text-align: left;
+      font-size: 13px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .lead-row {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      padding-bottom: 8px;
+    }
+
+    .lead-row:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .lead-key {
+      color: var(--text-sub);
+      font-weight: 500;
+    }
+
+    .lead-val {
+      color: var(--text-main);
+      font-weight: 600;
+      text-align: right;
+    }
+
+    .lead-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .action-btn-wa {
+      background: linear-gradient(135deg, #25D366, #128C7E);
+      color: white;
+      border: none;
+      border-radius: 14px;
+      padding: 14px;
+      font-size: 15px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(37, 211, 102, 0.3);
+      text-decoration: none;
+    }
+
+    .action-btn-restart {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-main);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 14px;
+      padding: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* Modal for Sharing with Client's Phone (QR Code) */
+    .qr-modal {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(7, 9, 14, 0.95);
+      backdrop-filter: blur(16px);
+      z-index: 100;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      text-align: center;
+    }
+
+    .qr-modal.active {
+      display: flex;
+    }
+
+    .qr-box {
+      background: white;
+      padding: 16px;
+      border-radius: 20px;
+      margin: 20px 0;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .qr-close-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: white;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    /* Client Share Bar on Desktop Header */
+    .top-action-bar {
+      position: absolute;
+      top: 10px;
+      right: 18px;
+      z-index: 30;
+    }
+
+    .share-phone-btn {
+      background: rgba(99, 102, 241, 0.2);
+      border: 1px solid rgba(99, 102, 241, 0.4);
+      color: #c7d2fe;
+      border-radius: 20px;
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .share-phone-btn:hover {
+      background: var(--primary);
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- Top Action Bar (QR Share for Client) -->
+    <div class="top-action-bar">
+      <button class="share-phone-btn" id="openQrBtn" onclick="toggleQrModal(true)">
+        📱 Open on Mobile
+      </button>
+    </div>
+
+    <!-- Phone Status Bar -->
+    <div class="status-bar">
+      <span id="clockDisplay">10:45</span>
+      <div class="notch-pill">
+        <span class="live-dot"></span>
+        <span>AI VOICE LIVE</span>
+      </div>
+      <span>5G 📶 98%</span>
+    </div>
+
+    <!-- ==================== SCREEN 1: INCOMING CALL ==================== -->
+    <div class="screen incoming-screen active" id="screenIncoming">
+      <div class="caller-header">
+        <div class="agency-tag">AutomateHyd AI Voice Agent</div>
+        <h1 class="caller-title" id="agentDisplayName">శృతి (Shruti)</h1>
+        <div class="caller-subtitle">AI Luxury Property Advisor</div>
+        <div class="caller-phone">Gachibowli & Financial District Projects</div>
+      </div>
+
+      <div class="avatar-wrapper">
+        <div class="avatar-ring"></div>
+        <div class="avatar-ring"></div>
+        <div class="avatar-ring"></div>
+        <div class="avatar-img" id="callerAvatar">👩‍💼</div>
+      </div>
+
+      <div class="call-meta-box">
+        <p><strong>⚡ Authentic Telugu Voice Engine</strong></p>
+        <p>Speaks natural conversational Telugu with fluent Hyderabad real estate terminology.</p>
+      </div>
+
+      <div class="call-actions-row">
+        <div style="display: flex; flex-direction: column; align-items: center;">
+          <button class="call-btn call-btn-decline" onclick="simulateDecline()" title="Decline">
+            ✕
+          </button>
+          <span class="btn-label">Decline</span>
+        </div>
+
+        <div style="display: flex; flex-direction: column; align-items: center;">
+          <button class="call-btn call-btn-accept" id="btnAcceptCall" onclick="answerCall()" title="Answer">
+            📞
+          </button>
+          <span class="btn-label" style="color: var(--accent-green); font-weight: 700;">Answer Call</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== SCREEN 2: IN-CALL ACTIVE ==================== -->
+    <div class="screen incall-screen" id="screenInCall">
+      <div class="incall-top">
+        <div class="incall-status">
+          <span class="live-dot"></span>
+          <span>Call Connected (HD Voice)</span>
+        </div>
+        <div class="incall-timer" id="callDuration">00:00</div>
+        <div class="incall-voice-badge" id="currentVoiceBadge">Voice: te-IN-Shruti (Telugu Neural)</div>
+      </div>
+
+      <!-- Live Dynamic Equalizer Bars -->
+      <div class="soundwave-box" id="soundwaveBox">
+        <div class="soundwave-bar"></div>
+        <div class="soundwave-bar"></div>
+        <div class="soundwave-bar"></div>
+        <div class="soundwave-bar"></div>
+        <div class="soundwave-bar"></div>
+        <div class="soundwave-bar"></div>
+        <div class="soundwave-bar"></div>
+        <div class="soundwave-bar"></div>
+        <div class="soundwave-bar"></div>
+        <div class="soundwave-bar"></div>
+      </div>
+
+      <!-- Live HUD Qualification Stats -->
+      <div class="lead-hud">
+        <div class="hud-stat">
+          <div class="hud-label">Intent</div>
+          <div class="hud-val" id="hudIntent">🔥 High (94%)</div>
+        </div>
+        <div class="hud-stat">
+          <div class="hud-label">Budget</div>
+          <div class="hud-val" id="hudBudget">₹1.5 - ₹2.2 Cr</div>
+        </div>
+        <div class="hud-stat">
+          <div class="hud-label">Site Visit</div>
+          <div class="hud-val" id="hudVisit">Requested</div>
+        </div>
+      </div>
+
+      <!-- Live Dual-Script Transcript -->
+      <div class="transcript-card" id="transcriptContainer">
+        <div class="msg-bubble msg-agent">
+          <div class="msg-header">
+            <span>👩‍💼 Shruti (AI)</span>
+            <span style="font-size: 10px; color: var(--text-sub);">Just now</span>
+          </div>
+          <div class="msg-content-telugu telugu-font" id="liveTeluguTranscript">
+            నమస్కారం అండి! ఆటోమేట్ హైదరాబాద్ రియల్ ఎస్టేట్ పార్ట్నర్ నుంచి శృతి మాట్లాడుతున్నాను...
+          </div>
+          <div class="msg-content-en" id="liveEnTranscript">
+            "Hello sir! I am Shruti from AutomateHyd Real Estate Partner..."
+          </div>
+        </div>
+      </div>
+
+      <!-- One-Tap Prompts for Fast Client Demo -->
+      <div class="prompts-container">
+        <div class="prompts-title">
+          <span>Tap to Ask (Or use Mic below)</span>
+          <span style="color: var(--accent-cyan); cursor: pointer;" onclick="toggleVoice()">Switch to Mohan 👨‍💼</span>
+        </div>
+        <div class="prompts-scroll">
+          <button class="prompt-chip" onclick="handleUserPrompt('budget')">
+            💰 3BHK Budget ఎంత?
+          </button>
+          <button class="prompt-chip" onclick="handleUserPrompt('amenities')">
+            🏊 Amenities & Club House?
+          </button>
+          <button class="prompt-chip" onclick="handleUserPrompt('site_visit')">
+            📅 Site Visit Schedule
+          </button>
+          <button class="prompt-chip" onclick="handleUserPrompt('whatsapp')">
+            📄 Brochure WhatsApp లో
+          </button>
+          <button class="prompt-chip" onclick="handleUserPrompt('loan')">
+            🏦 Bank Loan & EMI?
+          </button>
+        </div>
+      </div>
+
+      <!-- In-Call Action Bar -->
+      <div class="incall-controls">
+        <button class="mini-control-btn" id="btnToggleMic" onclick="toggleMic()" title="Microphone">
+          🎙️
+        </button>
+        <button class="mini-control-btn" id="btnMuteAudio" onclick="toggleMute()" title="Speaker">
+          🔊
+        </button>
+        <button class="hangup-btn" onclick="endCall()" title="End Call">
+          📞
+        </button>
+      </div>
+    </div>
+
+    <!-- ==================== SCREEN 3: LEAD QUALIFIED DOSSIER ==================== -->
+    <div class="screen lead-screen" id="screenLead">
+      <div>
+        <div class="lead-badge-big">✅</div>
+        <h2 class="lead-title">Lead Qualified Successfully!</h2>
+        <div class="lead-subtitle">Data auto-synced with AutomateHyd CRM</div>
+
+        <div class="lead-card">
+          <div class="lead-row">
+            <span class="lead-key">Lead Intent:</span>
+            <span class="lead-val" style="color: var(--accent-green);">🔥 Hot Lead (98%)</span>
+          </div>
+          <div class="lead-row">
+            <span class="lead-key">Preferred Location:</span>
+            <span class="lead-val">Gachibowli / Financial Dist</span>
+          </div>
+          <div class="lead-row">
+            <span class="lead-key">Unit Category:</span>
+            <span class="lead-val">Luxury 3BHK Gated Flat</span>
+          </div>
+          <div class="lead-row">
+            <span class="lead-key">Budget Bracket:</span>
+            <span class="lead-val">₹1.50 Cr - ₹2.20 Cr</span>
+          </div>
+          <div class="lead-row">
+            <span class="lead-key">Site Visit Slot:</span>
+            <span class="lead-val" style="color: var(--accent-cyan);">Saturday 11:00 AM (Cab Confirmed)</span>
+          </div>
+          <div class="lead-row">
+            <span class="lead-key">WhatsApp Brochure:</span>
+            <span class="lead-val" style="color: #25D366;">Delivered with Video Tour</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="lead-actions">
+        <a class="action-btn-wa" id="btnWhatsAppRedirect" href="#" target="_blank">
+          <span>💬 Open Summary on WhatsApp</span>
+        </a>
+        <button class="action-btn-restart" onclick="restartCallDemo()">
+          🔄 Run Call Demo Again
+        </button>
+      </div>
+    </div>
+
+    <!-- ==================== QR CODE MODAL FOR CLIENT PHONE ==================== -->
+    <div class="qr-modal" id="qrModal">
+      <button class="qr-close-btn" onclick="toggleQrModal(false)">✕</button>
+      <div class="agency-tag">Direct Mobile Demo</div>
+      <h3 style="color: white; font-size: 20px; margin-top: 6px;">Scan on Your Mobile Phone</h3>
+      <p style="color: var(--text-muted); font-size: 13px; max-width: 280px; margin-top: 4px;">
+        Show this to the client! Open camera on iPhone or Android to test incoming call directly on mobile.
+      </p>
+
+      <div class="qr-box">
+        <!-- Live dynamic QR generated from current origin or local IP -->
+        <img id="qrImage" src="" alt="Scan QR Code" style="width: 190px; height: 190px; display: block;">
+      </div>
+
+      <div style="font-size: 12px; color: var(--accent-cyan); font-weight: 600; word-break: break-all;" id="qrUrlText">
+        http://192.168.1.3:5000
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Audio Player Element -->
+  <audio id="agentAudioPlayer" playsinline preload="auto"></audio>
+
+  <script>
+    // --- STATE MANAGEMENT ---
+    let currentVoice = "te-IN-ShrutiNeural"; // or te-IN-MohanNeural
+    let callTimerInterval = null;
+    let callSeconds = 0;
+    let isMuted = false;
+    let isListening = false;
+    let recognition = null;
+
+    const audioPlayer = document.getElementById("agentAudioPlayer");
+    const soundwaveBox = document.getElementById("soundwaveBox");
+
+    // Ultra-realistic Humanized SSML Audio Library (with natural breath pauses & Hyderabad colloquial rhythm)
+    const AUDIO_REGISTRY = {
+      greeting_shruti: "static/audio/realestate_greeting_shruti_v2.mp3",
+      greeting_mohan: "static/audio/realestate_greeting_mohan_v2.mp3",
+      greeting_english: "static/audio/realestate_greeting_english_v2.mp3",
+      budget: "static/audio/realestate_budget_3bhk_shruti_v2.mp3",
+      amenities: "static/audio/realestate_amenities_shruti_v2.mp3",
+      site_visit: "static/audio/realestate_sitevisit_shruti_v2.mp3",
+      whatsapp: "static/audio/realestate_whatsapp_shruti_v2.mp3",
+      loan: "static/audio/realestate_bankloan_shruti_v2.mp3",
+      callback: "static/audio/realestate_callback_shruti.mp3"
+    };
+
+    const SCRIPT_REGISTRY = {
+      greeting_shruti: {
+        telugu: "హలో సార్, గుడ్ మార్నింగ్ అండి! నేను శృతి ని, ఆటోమేట్ హైదరాబాద్ నుంచి కాల్ చేస్తున్నానండి. రీసెంట్‌గా మీరు గచ్చిబౌలి మరియు ఫైనాన్షియల్ డిస్ట్రిక్ట్ దగ్గర గేటెడ్ కమ్యూనిటీ అపార్ట్‌మెంట్స్ గురించి చూస్తున్నారు కదా సర్? దాని గురించే ఒక బెస్ట్ ప్రాజెక్ట్ డీటెయిల్స్ షేర్ చేద్దామని కాల్ చేశాను అండి. మీ బడ్జెట్ మరియు రిక్వైర్మెంట్స్ కొంచెం చెప్తారా సర్?",
+        english: "Hello sir, good morning! I am Shruti from AutomateHyd. You were recently looking for gated community apartments near Gachibowli & Financial District, right sir? Calling to share details of a prime project. Could you share your budget and preferences?"
+      },
+      greeting_mohan: {
+        telugu: "నమస్కారం అండి! నేను మోహన్, ఆటోమేట్ హైదరాబాద్ రియల్ ఎస్టేట్ అడ్వైజర్‌ని. గచ్చిబౌలి, నార్సింగి మరియు తెల్లాపూర్ మెయిన్ ఏరియాల్లో, బెస్ట్ లగ్జరీ ప్రాజెక్ట్స్ గురించి మీకు గైడ్ చేద్దామని కాల్ చేశాను అండి. ప్రస్తుతం మీరు 2BHK కోసం చూస్తున్నారా, లేదా 3BHK కోసమా అండి సర్?",
+        english: "Hello sir! I am Mohan, real estate advisor at AutomateHyd. Guiding buyers for prime luxury gated communities across Gachibowli, Narsingi, and Tellapur. Are you looking for 2BHK or 3BHK sir?"
+      },
+      greeting_english: {
+        telugu: "హలో సర్, గుడ్ మార్నింగ్! దిస్ ఈజ్ శృతి కాలింగ్ ఫ్రమ్ ఆటోమేట్ హైదరాబాద్ రియల్ ఎస్టేట్ అడ్వైజరీ...",
+        english: "Hello sir, good morning! This is Shruti calling from AutomateHyd Real Estate Advisory. You recently enquired about premium gated community apartments near Gachibowli, right sir? Could you please let me know your preferred configuration?"
+      },
+      budget: {
+        telugu: "తప్పకుండా అండి! గచ్చిబౌలి మరియు తెల్లాపూర్ మెయిన్ రోడ్ దగ్గర, మా దగ్గర 1.5 కోట్ల నుంచి 2.2 కోట్ల రేంజ్ లో సూపర్బ్ 3BHK ఫ్లాట్స్ ఉన్నాయండి. ఇందులో 100% వాస్తు కంప్లైంట్ తో పాటు, 50,000 స్క్వేర్ ఫీట్ క్లబ్‌హౌస్, స్విమ్మింగ్ పూల్, జిమ్ మరియు 40కి పైగా వరల్డ్ క్లాస్ అమెనిటీస్ ఉన్నాయండి సర్.",
+        english: "Definitely sir! Near Gachibowli and Tellapur, we have superb 3BHK flats from ₹1.5 Cr to ₹2.2 Cr. 100% Vaastu compliant with 50,000 sq.ft grand clubhouse and 40+ world class amenities."
+      },
+      amenities: {
+        telugu: "అమెనిటీస్ గురించి చెప్పాలంటే అండి, ఇందులో గ్రాండ్ 50 వేల స్క్వేర్ ఫీట్ క్లబ్‌హౌస్ తో పాటు, టెంపరేచర్ కంట్రోల్డ్ స్విమ్మింగ్ పూల్, బ్యాడ్మింటన్ కోర్ట్స్, జిమ్ మరియు జాగింగ్ ట్రాక్ ఉన్నాయి. పిల్లల కోసం సపరేట్ ప్లే ఏరియా, మరియు సీనియర్ సిటిజన్స్ పార్క్ కూడా ప్లాన్ చేశారండి. 24/7 త్రీ-టైర్ సెక్యూరిటీ మరియు 100% పవర్ బ్యాకప్ ఉంటుంది సర్!",
+        english: "Regarding amenities: 50,000 sq.ft grand clubhouse, temperature-controlled swimming pool, badminton courts, gym, kids play area, senior citizen park, and 24/7 3-tier security."
+      },
+      site_visit: {
+        telugu: "చాలా సంతోషం అండి! ఈ శనివారం ఉదయం 11 గంటలకు గానీ, లేదా సాయంత్రం 4 గంటలకు గానీ మీకు వీలవుతుందా అండి? మీరు టైమ్ చెప్తే, మా సీనియర్ మేనేజర్ మీకు మోడల్ ఫ్లాట్ ని స్వయంగా చూపిస్తారు. అవసరమైతే మీ ఇంటి దగ్గర నుంచి క్యాబ్ పికప్ కూడా మేమే అరేంజ్ చేస్తాము సర్!",
+        english: "Wonderful! Would Saturday 11:00 AM or Sunday 4:00 PM be convenient? Our manager will show you the model flat, and we can also arrange a complimentary cab pickup from your home!"
+      },
+      whatsapp: {
+        telugu: "తప్పకుండా అండి! ప్రాజెక్ట్ బ్రోచర్, ఫ్లోర్ ప్లాన్స్, మాస్టర్ లేఅవుట్ మరియు కంప్లీట్ ప్రైసింగ్ షీట్, ఇప్పుడే మీ వాట్సాప్ నంబర్ కి సెండ్ చేస్తున్నానండి. మీరు ఒకసారి చూసి, మీ కన్వీనియంట్ టైమ్ చెప్తే ఫర్దర్ గా మాట్లాడదాం సర్.",
+        english: "Certainly sir! I have sent the project brochure, floor plans, and pricing sheet directly to your WhatsApp. Please take a look and let us know your convenient time."
+      },
+      loan: {
+        telugu: "అవునండి సర్! ఈ ప్రాజెక్ట్ SBI, HDFC మరియు ICICI బ్యాంకుల ద్వారా 100% రెరా అప్రూవ్డ్ అండి. మీకు 80% వరకు హోమ్ లోన్ అసిస్టెన్స్ తో పాటు, అతి తక్కువ వడ్డీ రేట్లతో ఈజీ EMI ఆప్షన్స్ కూడా కల్పిస్తాము అండి.",
+        english: "Yes sir! This project is 100% RERA approved with SBI, HDFC, and ICICI banks. Up to 80% home loan assistance with competitive low interest rates and easy EMIs."
+      }
+    };
+
+    // Update real clock
+    function updateClock() {
+      const now = new Date();
+      const hrs = String(now.getHours()).padStart(2, '0');
+      const mins = String(now.getMinutes()).padStart(2, '0');
+      document.getElementById('clockDisplay').textContent = `${hrs}:${mins}`;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // Audio animation listeners
+    audioPlayer.addEventListener("play", () => {
+      soundwaveBox.classList.add("active");
+    });
+    audioPlayer.addEventListener("pause", () => {
+      soundwaveBox.classList.remove("active");
+    });
+    audioPlayer.addEventListener("ended", () => {
+      soundwaveBox.classList.remove("active");
+    });
+
+    // --- CALL LIFECYCLE ---
+    function answerCall() {
+      // 1. Switch Screen
+      document.getElementById("screenIncoming").classList.remove("active");
+      document.getElementById("screenInCall").classList.add("active");
+
+      // 2. Start Call Timer
+      callSeconds = 0;
+      updateCallTimer();
+      callTimerInterval = setInterval(() => {
+        callSeconds++;
+        updateCallTimer();
+      }, 1000);
+
+      // 3. Play Greeting Audio
+      const greetingKey = (currentVoice === "te-IN-MohanNeural") ? "greeting_mohan" : "greeting_shruti";
+      playSpeech(greetingKey);
+    }
+
+    function updateCallTimer() {
+      const mins = String(Math.floor(callSeconds / 60)).padStart(2, '0');
+      const secs = String(callSeconds % 60).padStart(2, '0');
+      document.getElementById("callDuration").textContent = `${mins}:${secs}`;
+    }
+
+    function playSpeech(audioKeyOrUrl, customTextObj) {
+      soundwaveBox.classList.add("active");
+
+      let audioSrc = AUDIO_REGISTRY[audioKeyOrUrl] || audioKeyOrUrl;
+      let textData = customTextObj || SCRIPT_REGISTRY[audioKeyOrUrl];
+
+      if (textData) {
+        document.getElementById("liveTeluguTranscript").textContent = textData.telugu;
+        document.getElementById("liveEnTranscript").textContent = `"${textData.english}"`;
+      }
+
+      audioPlayer.src = audioSrc;
+      audioPlayer.play().catch(err => {
+        console.warn("Audio autoplay policy triggered:", err);
+      });
+    }
+
+    // Handle One-Tap User Prompt
+    function handleUserPrompt(key) {
+      // 1. Add user bubble
+      appendUserBubble(key);
+
+      // 2. Play corresponding response
+      setTimeout(() => {
+        playSpeech(key);
+        // Update HUD based on prompt
+        if (key === "budget") {
+          document.getElementById("hudBudget").textContent = "₹1.5 - ₹2.2 Cr";
+          document.getElementById("hudIntent").textContent = "🔥 Hot (96%)";
+        } else if (key === "site_visit") {
+          document.getElementById("hudVisit").textContent = "Saturday 11 AM";
+          document.getElementById("hudIntent").textContent = "🔥 Hot (98%)";
+        }
+      }, 500);
+    }
+
+    function appendUserBubble(key) {
+      const promptLabels = {
+        budget: "3BHK Budget ఎంత ఉంటుంది అండి?",
+        amenities: "Amenities మరియు Club House ఫీచర్స్ ఏంటి?",
+        site_visit: "ఈ శనివారం సైట్ విజిట్ ప్లాన్ చేయండి",
+        whatsapp: "బ్రోచర్ ని వాట్సాప్ లో పంపగలరా?",
+        loan: "బ్యాంక్ లోన్ & EMI సపోర్ట్ ఉందా?"
+      };
+
+      const userText = promptLabels[key] || key;
+      const container = document.getElementById("transcriptContainer");
+
+      const bubble = document.createElement("div");
+      bubble.className = "msg-bubble msg-user";
+      bubble.innerHTML = `
+        <div class="msg-header">
+          <span>You</span>
+        </div>
+        <div class="msg-content-telugu telugu-font">
+          ${userText}
+        </div>
+      `;
+      container.appendChild(bubble);
+      container.scrollTop = container.scrollHeight;
+    }
+
+    // Cycle through 3 Voice Personas (Telugu Female, Telugu Male, Indian English Expressive)
+    function toggleVoice() {
+      if (currentVoice === "te-IN-ShrutiNeural") {
+        currentVoice = "te-IN-MohanNeural";
+        document.getElementById("agentDisplayName").textContent = "మోహన్ (Mohan)";
+        document.getElementById("callerAvatar").textContent = "👨‍💼";
+        document.getElementById("currentVoiceBadge").textContent = "Voice: Mohan (Telugu Advisor Natural v2)";
+        playSpeech("greeting_mohan");
+      } else if (currentVoice === "te-IN-MohanNeural") {
+        currentVoice = "en-IN-NeerjaExpressiveNeural";
+        document.getElementById("agentDisplayName").textContent = "Neerja (English)";
+        document.getElementById("callerAvatar").textContent = "👩‍💼";
+        document.getElementById("currentVoiceBadge").textContent = "Voice: Neerja (Indian English Expressive)";
+        playSpeech("greeting_english");
+      } else {
+        currentVoice = "te-IN-ShrutiNeural";
+        document.getElementById("agentDisplayName").textContent = "శృతి (Shruti)";
+        document.getElementById("callerAvatar").textContent = "👩‍💼";
+        document.getElementById("currentVoiceBadge").textContent = "Voice: Shruti (Telugu Human Natural v2)";
+        playSpeech("greeting_shruti");
+      }
+    }
+
+    // Toggle Mute
+    function toggleMute() {
+      isMuted = !isMuted;
+      audioPlayer.muted = isMuted;
+      const btn = document.getElementById("btnMuteAudio");
+      if (isMuted) {
+        btn.textContent = "🔇";
+        btn.classList.add("active");
+      } else {
+        btn.textContent = "🔊";
+        btn.classList.remove("active");
+      }
+    }
+
+    // Speech Recognition (Mic Input in Telugu / English)
+    function toggleMic() {
+      const micBtn = document.getElementById("btnToggleMic");
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+      if (!SpeechRecognition) {
+        alert("Speech Recognition not supported on this browser. You can use the Quick-Tap buttons!");
+        return;
+      }
+
+      if (!recognition) {
+        recognition = new SpeechRecognition();
+        recognition.lang = "te-IN"; // Telugu Speech Recognition
+        recognition.interimResults = false;
+
+        recognition.onstart = () => {
+          isListening = true;
+          micBtn.classList.add("active");
+          micBtn.textContent = "🔴";
+        };
+
+        recognition.onresult = (e) => {
+          const transcript = e.results[0][0].transcript;
+          console.log("Recognized speech:", transcript);
+          
+          // Send to backend /api/chat
+          fetch("/api/chat", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({ message: transcript, voice: currentVoice })
+          })
+          .then(res => res.json())
+          .then(data => {
+            const customData = {
+              telugu: data.reply_telugu,
+              english: data.reply_english
+            };
+            playSpeech(data.audio_url, customData);
+          })
+          .catch(err => {
+            console.error("Chat API error:", err);
+          });
+        };
+
+        recognition.onend = () => {
+          isListening = false;
+          micBtn.classList.remove("active");
+          micBtn.textContent = "🎙️";
+        };
+      }
+
+      if (isListening) {
+        recognition.stop();
+      } else {
+        recognition.start();
+      }
+    }
+
+    // End Call -> Show Lead Dossier
+    function endCall() {
+      clearInterval(callTimerInterval);
+      audioPlayer.pause();
+      soundwaveBox.classList.remove("active");
+
+      // Save lead to backend
+      fetch("/api/lead", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+          name: "Interested Hyderabad Buyer",
+          location: "Gachibowli / Financial Dist",
+          budget: "₹1.5 - ₹2.2 Cr",
+          site_visit: "Saturday 11:00 AM",
+          score: "98% (Hot Lead)"
+        })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.whatsapp_url) {
+          document.getElementById("btnWhatsAppRedirect").href = data.whatsapp_url;
+        }
+      })
+      .catch(err => console.log(err));
+
+      document.getElementById("screenInCall").classList.remove("active");
+      document.getElementById("screenLead").classList.add("active");
+    }
+
+    function simulateDecline() {
+      alert("Call declined. Tap 'Answer Call' to experience the Telugu AI voice demo!");
+    }
+
+    function restartCallDemo() {
+      document.getElementById("screenLead").classList.remove("active");
+      document.getElementById("screenIncoming").classList.add("active");
+    }
+
+    // --- QR CODE CLIENT SHARING ---
+    function toggleQrModal(show) {
+      const modal = document.getElementById("qrModal");
+      if (show) {
+        // Construct target mobile URL using current host or local LAN IP
+        const host = window.location.host || "192.168.1.3:5000";
+        const protocol = window.location.protocol.includes("https") ? "https" : "http";
+        const targetUrl = `${protocol}://${host}`;
+        
+        document.getElementById("qrUrlText").textContent = targetUrl;
+        document.getElementById("qrImage").src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(targetUrl)}`;
+        modal.classList.add("active");
+      } else {
+        modal.classList.remove("active");
+      }
+    }
+  </script>
+</body>
+</html>
