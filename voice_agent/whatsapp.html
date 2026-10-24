@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>WhatsApp AI Automation Demo | AutomateHyd</title>
+  <!-- Google Fonts: Inter & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Noto+Sans+Telugu:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --wa-dark-bg: #0b141a;
+      --wa-header-bg: #1f2c34;
+      --wa-chat-bg: #0b141a;
+      --wa-msg-in: #202c33;
+      --wa-msg-out: #005c4b;
+      --wa-accent: #25d366;
+      --wa-teal: #00a884;
+      --wa-text-primary: #e9edef;
+      --wa-text-secondary: #8696a0;
+      --wa-input-bg: #2a3942;
+      --wa-border: rgba(134, 150, 160, 0.15);
+      --wa-blue-ticks: #53bdeb;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: #070a0e;
+      color: var(--wa-text-primary);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-image: radial-gradient(circle at 50% 10%, rgba(0, 168, 132, 0.12) 0%, transparent 60%);
+    }
+
+    .telugu-font {
+      font-family: 'Noto Sans Telugu', -apple-system, sans-serif;
+    }
+
+    /* Container for Mobile & Desktop */
+    .wa-app-container {
+      width: 100%;
+      max-width: 440px;
+      height: 100vh;
+      max-height: 880px;
+      background: var(--wa-dark-bg);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 36px;
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 168, 132, 0.15);
+    }
+
+    @media (max-width: 480px) {
+      .wa-app-container {
+        max-width: 100%;
+        height: 100vh;
+        max-height: 100vh;
+        border-radius: 0;
+        border: none;
+      }
+    }
+
+    /* Top Switcher: Voice Agent vs WhatsApp */
+    .mode-switcher-bar {
+      height: 38px;
+      background: #111b21;
+      border-bottom: 1px solid var(--wa-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding: 0 16px;
+      font-size: 12px;
+      font-weight: 600;
+      z-index: 30;
+    }
+
+    .switcher-tab {
+      color: var(--wa-text-secondary);
+      text-decoration: none;
+      padding: 6px 14px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .switcher-tab.active {
+      background: rgba(0, 168, 132, 0.18);
+      color: var(--wa-teal);
+    }
+
+    .switcher-tab:hover {
+      color: var(--wa-text-primary);
+    }
+
+    /* WhatsApp Header */
+    .wa-header {
+      height: 60px;
+      background: var(--wa-header-bg);
+      padding: 0 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--wa-border);
+      z-index: 20;
+    }
+
+    .wa-header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .wa-back-btn {
+      color: var(--wa-text-primary);
+      font-size: 20px;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .wa-avatar-box {
+      position: relative;
+      width: 40px;
+      height: 40px;
+    }
+
+    .wa-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #10b981, #047857);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    .wa-online-dot {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 10px;
+      height: 10px;
+      background: #25d366;
+      border: 2px solid var(--wa-header-bg);
+      border-radius: 50%;
+    }
+
+    .wa-header-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .wa-header-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--wa-text-primary);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .verified-badge {
+      color: var(--wa-teal);
+      font-size: 14px;
+    }
+
+    .wa-header-status {
+      font-size: 11px;
+      color: var(--wa-teal);
+    }
+
+    .wa-header-actions {
+      display: flex;
+      gap: 16px;
+      color: var(--wa-text-secondary);
+      font-size: 18px;
+    }
+
+    /* Chat Messages Canvas */
+    .wa-chat-canvas {
+      flex: 1;
+      padding: 14px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background-color: var(--wa-chat-bg);
+      background-image: radial-gradient(#1f2c34 0.75px, transparent 0.75px);
+      background-size: 16px 16px;
+      position: relative;
+    }
+
+    /* Encryption & Date Pills */
+    .wa-system-pill {
+      align-self: center;
+      background: #182229;
+      color: #ffe082;
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 11px;
+      text-align: center;
+      max-width: 90%;
+      line-height: 1.4;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+      margin: 4px 0;
+    }
+
+    .wa-date-pill {
+      align-self: center;
+      background: #182229;
+      color: var(--wa-text-secondary);
+      border-radius: 8px;
+      padding: 4px 10px;
+      font-size: 11px;
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      margin: 4px 0;
+    }
+
+    /* Message Bubbles */
+    .wa-bubble {
+      max-width: 85%;
+      border-radius: 8px;
+      padding: 8px 10px 6px;
+      font-size: 13.5px;
+      line-height: 1.45;
+      position: relative;
+      word-wrap: break-word;
+      box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    }
+
+    .wa-bubble-in {
+      align-self: flex-start;
+      background: var(--wa-msg-in);
+      color: var(--wa-text-primary);
+      border-top-left-radius: 0;
+    }
+
+    .wa-bubble-out {
+      align-self: flex-end;
+      background: var(--wa-msg-out);
+      color: var(--wa-text-primary);
+      border-top-right-radius: 0;
+    }
+
+    .wa-meta {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 3px;
+      font-size: 10px;
+      color: rgba(255, 255, 255, 0.55);
+      margin-top: 4px;
+      float: right;
+      padding-left: 10px;
+    }
+
+    .wa-ticks {
+      color: var(--wa-blue-ticks);
+      font-weight: bold;
+    }
+
+    /* Rich Card: Brochure Attachment */
+    .wa-card-attachment {
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 6px;
+    }
+
+    .wa-file-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      background: #ef4444;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: white;
+      font-weight: bold;
+    }
+
+    .wa-file-meta {
+      flex: 1;
+    }
+
+    .wa-file-name {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--wa-text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 170px;
+    }
+
+    .wa-file-size {
+      font-size: 10.5px;
+      color: var(--wa-text-secondary);
+      margin-top: 2px;
+    }
+
+    .wa-download-btn {
+      background: var(--wa-teal);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    /* Voice Note Bubble inside WhatsApp */
+    .wa-voicenote-card {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 4px 0;
+      min-width: 220px;
+    }
+
+    .vn-play-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #00a884;
+      color: white;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .vn-wave {
+      flex: 1;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .vn-bar {
+      width: 3px;
+      height: 8px;
+      background: #8696a0;
+      border-radius: 2px;
+    }
+
+    .vn-bar.playing {
+      background: var(--wa-teal);
+      animation: vn-bounce 0.6s ease infinite alternate;
+    }
+
+    @keyframes vn-bounce {
+      0% { height: 4px; }
+      100% { height: 20px; }
+    }
+
+    .vn-duration {
+      font-size: 11px;
+      color: var(--wa-text-secondary);
+    }
+
+    /* Lead Confirmation Box */
+    .lead-booking-card {
+      background: rgba(0, 168, 132, 0.15);
+      border: 1px solid rgba(0, 168, 132, 0.35);
+      border-radius: 10px;
+      padding: 10px;
+      margin-top: 8px;
+    }
+
+    .lbc-title {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #34d399;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .lbc-detail {
+      font-size: 11.5px;
+      color: #e5e7eb;
+      margin-top: 4px;
+      line-height: 1.4;
+    }
+
+    /* Typing Indicator */
+    .wa-typing-indicator {
+      display: none;
+      align-self: flex-start;
+      background: var(--wa-msg-in);
+      border-radius: 8px;
+      padding: 10px 14px;
+      gap: 4px;
+      align-items: center;
+    }
+
+    .wa-typing-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--wa-text-secondary);
+      animation: typing-anim 1.2s infinite ease-in-out;
+    }
+
+    .wa-typing-dot:nth-child(2) { animation-delay: 0.2s; }
+    .wa-typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes typing-anim {
+      0%, 80%, 100% { transform: scale(0.7); opacity: 0.4; }
+      40% { transform: scale(1.1); opacity: 1; }
+    }
+
+    /* Quick Action Chips */
+    .wa-quick-chips {
+      background: #111b21;
+      padding: 8px 12px;
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      border-top: 1px solid var(--wa-border);
+    }
+
+    .wa-quick-chips::-webkit-scrollbar {
+      display: none;
+    }
+
+    .wa-chip {
+      background: var(--wa-input-bg);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 18px;
+      padding: 6px 12px;
+      font-size: 12px;
+      color: var(--wa-text-primary);
+      white-space: nowrap;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: background 0.15s ease;
+    }
+
+    .wa-chip:hover, .wa-chip:active {
+      background: var(--wa-teal);
+      color: white;
+    }
+
+    /* Chat Input Bar */
+    .wa-input-bar {
+      height: 56px;
+      background: var(--wa-header-bg);
+      padding: 6px 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      z-index: 20;
+    }
+
+    .wa-input-wrapper {
+      flex: 1;
+      background: var(--wa-input-bg);
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      height: 42px;
+    }
+
+    .wa-input-field {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--wa-text-primary);
+      font-size: 14px;
+      outline: none;
+    }
+
+    .wa-input-field::placeholder {
+      color: var(--wa-text-secondary);
+    }
+
+    .wa-send-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--wa-teal);
+      color: white;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+      transition: transform 0.15s ease;
+    }
+
+    .wa-send-btn:active {
+      transform: scale(0.95);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="wa-app-container">
+    <!-- Top Mode Switcher Bar -->
+    <div class="mode-switcher-bar">
+      <a class="switcher-tab" href="/">
+        <span>📞</span> Voice Agent Call
+      </a>
+      <a class="switcher-tab active" href="/whatsapp">
+        <span>💬</span> WhatsApp AI Bot
+      </a>
+    </div>
+
+    <!-- WhatsApp Header -->
+    <div class="wa-header">
+      <div class="wa-header-left">
+        <a class="wa-back-btn" href="/">‹</a>
+        <div class="wa-avatar-box">
+          <div class="wa-avatar">🏡</div>
+          <div class="wa-online-dot"></div>
+        </div>
+        <div class="wa-header-info">
+          <div class="wa-header-title">
+            <span>Fortune Heights AI</span>
+            <span class="verified-badge" title="Official Business Account">✓</span>
+          </div>
+          <div class="wa-header-status">online | AutomateHyd Partner</div>
+        </div>
+      </div>
+      <div class="wa-header-actions">
+        <span style="cursor: pointer;" onclick="playShrutiVoiceNote()" title="Voice Note">🎙️</span>
+        <span style="cursor: pointer;" onclick="openRealWhatsApp()" title="Open in Real WhatsApp">📱</span>
+      </div>
+    </div>
+
+    <!-- Chat Messages Canvas -->
+    <div class="wa-chat-canvas" id="chatCanvas">
+      <!-- Security notice -->
+      <div class="wa-system-pill">
+        🔒 Messages and calls are end-to-end encrypted. AutomateHyd AI Lead Qualification active.
+      </div>
+
+      <div class="wa-date-pill">TODAY</div>
+
+      <!-- Initial Welcome Message from AI -->
+      <div class="wa-bubble wa-bubble-in">
+        <div style="font-weight: 600; color: #34d399; margin-bottom: 4px;">Fortune Heights AI Assistant</div>
+        <div class="telugu-font" style="margin-bottom: 6px;">
+          నమస్కారం అండి! 🙏 Welcome to <strong>Fortune Heights Gachibowli</strong> — Luxury 3BHK Gated Community.
+        </div>
+        <div>
+          I am <strong>Shruti</strong>, your 24/7 AI Property Assistant. How can I help you today?
+        </div>
+        
+        <!-- Attached Voice Note Bubble -->
+        <div class="wa-card-attachment" style="margin-top: 8px; background: rgba(0, 168, 132, 0.1);">
+          <button class="vn-play-btn" id="btnPlayVn" onclick="toggleVoiceNote()">▶</button>
+          <div style="flex: 1;">
+            <div style="font-size: 11.5px; font-weight: 600; color: #34d399;">🎙️ Voice Greeting (Telugu)</div>
+            <div class="vn-wave" id="vnWave">
+              <div class="vn-bar"></div>
+              <div class="vn-bar"></div>
+              <div class="vn-bar"></div>
+              <div class="vn-bar"></div>
+              <div class="vn-bar"></div>
+              <div class="vn-bar"></div>
+              <div class="vn-bar"></div>
+              <div class="vn-bar"></div>
+              <div class="vn-bar"></div>
+              <div class="vn-bar"></div>
+            </div>
+          </div>
+          <span class="vn-duration" id="vnTime">0:24</span>
+        </div>
+
+        <div class="wa-meta">
+          <span>10:30 AM</span>
+        </div>
+      </div>
+
+      <!-- Typing Indicator -->
+      <div class="wa-typing-indicator" id="typingIndicator">
+        <div class="wa-typing-dot"></div>
+        <div class="wa-typing-dot"></div>
+        <div class="wa-typing-dot"></div>
+      </div>
+    </div>
+
+    <!-- Quick Action Chips for Fast Demoing -->
+    <div class="wa-quick-chips">
+      <button class="wa-chip" onclick="sendQuickMessage('3BHK Brochure & Floor Plans PDF')">
+        📄 Download Brochure (PDF)
+      </button>
+      <button class="wa-chip" onclick="sendQuickMessage('Gachibowli 3BHK Pricing and Budget details')">
+        💰 Price & Payment Plans
+      </button>
+      <button class="wa-chip" onclick="sendQuickMessage('Clubhouse & Luxury Amenities details')">
+        🏊 Amenities & Club
+      </button>
+      <button class="wa-chip" onclick="sendQuickMessage('Ee Saturday Site Visit plan cheyandi')">
+        📅 Book Site Visit (Free Cab)
+      </button>
+      <button class="wa-chip" onclick="sendQuickMessage('HDFC and SBI Bank Loan & EMI options')">
+        🏦 Bank Loan & EMI
+      </button>
+    </div>
+
+    <!-- Chat Input Bar -->
+    <div class="wa-input-bar">
+      <div class="wa-input-wrapper">
+        <input 
+          type="text" 
+          class="wa-input-field" 
+          id="messageInput" 
+          placeholder="Type message in Telugu or English..." 
+          onkeydown="if(event.key === 'Enter') handleSend()"
+        />
+      </div>
+      <button class="wa-send-btn" id="btnSend" onclick="handleSend()">
+        ➤
+      </button>
+    </div>
+  </div>
+
+  <!-- Hidden Audio Player for Voice Notes -->
+  <audio id="vnAudioPlayer" src="/static/audio/realestate_greeting_shruti_v2.mp3" playsinline></audio>
+
+  <script>
+    const chatCanvas = document.getElementById("chatCanvas");
+    const messageInput = document.getElementById("messageInput");
+    const typingIndicator = document.getElementById("typingIndicator");
+    const vnPlayer = document.getElementById("vnAudioPlayer");
+    const btnPlayVn = document.getElementById("btnPlayVn");
+    const vnWave = document.getElementById("vnWave");
+
+    let isPlayingVn = false;
+
+    // Voice Note controls
+    function toggleVoiceNote() {
+      if (isPlayingVn) {
+        vnPlayer.pause();
+      } else {
+        vnPlayer.play();
+      }
+    }
+
+    vnPlayer.addEventListener("play", () => {
+      isPlayingVn = true;
+      btnPlayVn.textContent = "⏸";
+      vnWave.querySelectorAll(".vn-bar").forEach(b => b.classList.add("playing"));
+    });
+
+    vnPlayer.addEventListener("pause", () => {
+      isPlayingVn = false;
+      btnPlayVn.textContent = "▶";
+      vnWave.querySelectorAll(".vn-bar").forEach(b => b.classList.remove("playing"));
+    });
+
+    vnPlayer.addEventListener("ended", () => {
+      isPlayingVn = false;
+      btnPlayVn.textContent = "▶";
+      vnWave.querySelectorAll(".vn-bar").forEach(b => b.classList.remove("playing"));
+    });
+
+    function playShrutiVoiceNote() {
+      toggleVoiceNote();
+    }
+
+    function openRealWhatsApp() {
+      const text = encodeURIComponent("Hi! I would like to know details about Fortune Heights 3BHK flats in Gachibowli.");
+      window.open(`https://api.whatsapp.com/send?phone=919000000000&text=${text}`, "_blank");
+    }
+
+    function getCurrentTime() {
+      const now = new Date();
+      let hrs = now.getHours();
+      let mins = String(now.getMinutes()).padStart(2, '0');
+      const ampm = hrs >= 12 ? 'PM' : 'AM';
+      hrs = hrs % 12 || 12;
+      return `${hrs}:${mins} ${ampm}`;
+    }
+
+    function handleSend() {
+      const text = messageInput.value.trim();
+      if (!text) return;
+
+      // 1. Append user message bubble
+      appendMessage(text, "out");
+      messageInput.value = "";
+
+      // 2. Show typing indicator
+      showTyping(true);
+
+      // 3. Query Backend
+      fetch("/api/whatsapp-chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: text })
+      })
+      .then(res => res.json())
+      .then(data => {
+        showTyping(false);
+        appendMessage(data.reply_text, "in", data.card);
+      })
+      .catch(err => {
+        showTyping(false);
+        // Fallback intelligent responses
+        generateClientFallback(text);
+      });
+    }
+
+    function sendQuickMessage(text) {
+      messageInput.value = text;
+      handleSend();
+    }
+
+    function appendMessage(text, sender, cardData) {
+      const bubble = document.createElement("div");
+      bubble.className = `wa-bubble wa-bubble-${sender}`;
+
+      let formattedText = text.replace(/\*(.*?)\*/g, '<strong>$1</strong>');
+      formattedText = formattedText.replace(/\n/g, '<br/>');
+
+      let html = `<div>${formattedText}</div>`;
+
+      // Optional Rich Attachment Cards
+      if (cardData) {
+        if (cardData.type === "brochure") {
+          html += `
+            <div class="wa-card-attachment">
+              <div class="wa-file-icon">PDF</div>
+              <div class="wa-file-meta">
+                <div class="wa-file-name">Fortune_Heights_Brochure_2026.pdf</div>
+                <div class="wa-file-size">14.8 MB • Master Layout & Floor Plans</div>
+              </div>
+              <a href="/static/audio/realestate_greeting_shruti_v2.mp3" download="Fortune_Heights_Brochure.pdf" class="wa-download-btn" title="Download">⬇</a>
+            </div>
+          `;
+        } else if (cardData.type === "site_visit") {
+          html += `
+            <div class="lead-booking-card">
+              <div class="lbc-title">✅ VIP Site Visit Confirmed</div>
+              <div class="lbc-detail">
+                📅 <strong>Saturday, 11:00 AM</strong><br/>
+                📍 Financial District, Gachibowli<br/>
+                🚗 <strong>Complimentary Cab Pickup Arranged</strong>
+              </div>
+            </div>
+          `;
+        }
+      }
+
+      html += `
+        <div class="wa-meta">
+          <span>${getCurrentTime()}</span>
+          ${sender === "out" ? '<span class="wa-ticks">✓✓</span>' : ''}
+        </div>
+      `;
+
+      bubble.innerHTML = html;
+      chatCanvas.insertBefore(bubble, typingIndicator);
+      chatCanvas.scrollTop = chatCanvas.scrollHeight;
+    }
+
+    function showTyping(show) {
+      if (show) {
+        typingIndicator.style.display = "flex";
+      } else {
+        typingIndicator.style.display = "none";
+      }
+      chatCanvas.scrollTop = chatCanvas.scrollHeight;
+    }
+
+    // Client-side fallback if offline
+    function generateClientFallback(text) {
+      const lower = text.toLowerCase();
+      let reply = "";
+      let card = null;
+
+      if (lower.includes("brochure") || lower.includes("pdf") || lower.includes("plan")) {
+        reply = "Certainly sir! Here is the official *Fortune Heights Master Brochure* including high-res 3BHK floor layouts and pricing structure:";
+        card = { type: "brochure" };
+      } else if (lower.includes("budget") || lower.includes("price") || lower.includes("cost") || lower.includes("ధర")) {
+        reply = "ఖచ్చితంగా అండి! *Fortune Heights* లో 3BHK లగ్జరీ ఫ్లాట్స్ *₹1.50 Cr నుండి ₹2.20 Cr* రేంజ్ లో ఉన్నాయి. \n\n• Unit Sizes: *1,950 to 2,480 Sq.Ft.*\n• 100% Vaastu Compliant\n• Special Pre-Launch Discount on booking this week!";
+      } else if (lower.includes("visit") || lower.includes("saturday") || lower.includes("సైట్ విజిట్")) {
+        reply = "Wonderful! Your VIP Site Visit has been successfully reserved:";
+        card = { type: "site_visit" };
+      } else {
+        reply = "నమస్కారం అండి! మీ రిక్వైర్మెంట్ నోట్ చేసుకున్నాము. మా సీనియర్ రిలేషన్షిప్ మేనేజర్ మీకు విత్ ఇన్ 10 మినిట్స్ లో కాల్ చేస్తారు. \n\nAre you looking to book a weekend site visit?";
+      }
+
+      appendMessage(reply, "in", card);
+    }
+  </script>
+</body>
+</html>

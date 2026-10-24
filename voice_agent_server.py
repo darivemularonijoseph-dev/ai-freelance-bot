@@ -284,6 +284,84 @@ def capture_lead():
         "lead_count": len(leads)
     })
 
+@app.route("/whatsapp")
+def whatsapp_page():
+    """Serves the WhatsApp AI Automation demo dashboard."""
+    return send_from_directory("voice_agent", "whatsapp.html")
+
+@app.route("/api/whatsapp-chat", methods=["POST"])
+def whatsapp_chat():
+    """Handles automated WhatsApp conversation with Gemini and rich media."""
+    data = request.json or {}
+    message = (data.get("message") or "").strip()
+    msg_lower = message.lower()
+    
+    # 1. Quick intent card responses
+    if any(k in msg_lower for k in ["brochure", "pdf", "plan", "లేఅవుట్", "బ్రోచర్"]):
+        reply = (
+            "Certainly sir! Here is the official *Fortune Heights Master Brochure* "
+            "including high-res 3BHK floor layouts and pricing structure:"
+        )
+        return jsonify({
+            "status": "success",
+            "reply_text": reply,
+            "card": {"type": "brochure"}
+        })
+
+    if any(k in msg_lower for k in ["visit", "saturday", "sunday", "weekend", "సైట్ విజిట్", "చూస్తాను"]):
+        lead = {
+            "name": "WhatsApp Buyer",
+            "location": "Gachibowli / Financial Dist",
+            "budget": "₹1.5 - ₹2.2 Cr",
+            "site_visit": "Saturday 11:00 AM (Cab Confirmed)",
+            "score": "98% (Hot WhatsApp Lead)"
+        }
+        send_telegram_alert(lead)
+        reply = "Wonderful! Your VIP Site Visit has been successfully reserved with complimentary AC cab pickup:"
+        return jsonify({
+            "status": "success",
+            "reply_text": reply,
+            "card": {"type": "site_visit"}
+        })
+
+    # 2. Query Gemini for spontaneous WhatsApp real estate response
+    config = load_config()
+    api_key = config.get("gemini_api_key") or os.environ.get("GEMINI_API_KEY", "").strip()
+    if api_key:
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-lite-latest:generateContent?key={api_key}"
+        prompt = (
+            "You are Shruti, an expert AI WhatsApp sales consultant for Fortune Heights by AutomateHyd in Gachibowli, Hyderabad. "
+            f"The buyer just sent this WhatsApp message: \"{message}\"\n\n"
+            "CRITICAL RULES:\n"
+            "1. Format with WhatsApp markdown (*bold*, bullet points, emojis).\n"
+            "2. Keep response concise (under 50 words) and conversational.\n"
+            "3. If buyer writes in Telugu, reply in warm conversational Telugu with honorifics (అండి/సర్). If English, reply in friendly English.\n"
+            "4. Always suggest either booking a weekend site visit or downloading the PDF brochure."
+        )
+        try:
+            resp = requests.post(url, json={"contents": [{"parts": [{"text": prompt}]}]}, headers={"Content-Type": "application/json"}, timeout=8)
+            if resp.status_code == 200:
+                ai_text = resp.json()["candidates"][0]["content"]["parts"][0]["text"].strip()
+                return jsonify({
+                    "status": "success",
+                    "reply_text": ai_text
+                })
+        except Exception as e:
+            print(f"[WARN] WhatsApp Gemini error: {e}")
+
+    # Fallback
+    fallback = (
+        "నమస్కారం అండి! 🙏 *Fortune Heights* లో 3BHK లగ్జరీ ఫ్లాట్స్ *₹1.50 Cr నుండి ₹2.20 Cr* రేంజ్ లో ఉన్నాయి.\n\n"
+        "• 50,000 Sq.Ft Grand Clubhouse\n"
+        "• 100% Vaastu Compliant\n"
+        "• HDFC & SBI Bank Loans Available\n\n"
+        "Shall I schedule a VIP site visit for you this Saturday?"
+    )
+    return jsonify({
+        "status": "success",
+        "reply_text": fallback
+    })
+
 import sys
 if sys.platform == "win32":
     try:
