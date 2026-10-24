@@ -1,14 +1,14 @@
 services:
   - type: web
-    name: ai-freelance-telegram-bot
+    name: automatehyd-telugu-voice-agent
     env: python
     plan: free
     buildCommand: pip install -r requirements.txt
-    startCommand: python bot_listener.py
+    startCommand: python voice_agent_server.py
     envVars:
-      - key: BOT_TOKEN
-        value: 8725679037:AAFDFl8xDz9WeZiA_Jdozb9rAZQ37WSRKI4
-      - key: CHAT_ID
-        value: "8856823322"
       - key: GEMINI_API_KEY
+        sync: false
+      - key: BOT_TOKEN
+        sync: false
+      - key: CHAT_ID
         sync: false

@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutomateHyd — AI Automation for Hyderabad Businesses | Save 20+ Hours/Week</title>
+    <meta name="description" content="AutomateHyd builds AI-powered WhatsApp bots, CRM automation, and lead qualification systems for Hyderabad businesses. Convert 3x more leads on autopilot.">
+    <meta name="keywords" content="AI automation Hyderabad, WhatsApp bot, CRM integration, lead qualification, real estate automation, business automation Hyderabad">
+    <meta name="author" content="Roni Joseph">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="bg-grid"></div>
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+    <div class="bg-glow bg-glow-3"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="container nav-container">
+            <a href="#" class="logo">
+                <span class="logo-icon">⚡</span>
+                <span class="logo-text">Automate<span class="logo-accent">Hyd</span></span>
+            </a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#services">Services</a></li>
+                <li><a href="#how-it-works">How It Works</a></li>
+                <li><a href="#results">Results</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li><a href="#contact" class="nav-cta">Get Free Audit →</a></li>
+            </ul>
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle navigation menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge animate-in">
+                    <span class="badge-dot"></span>
+                    Trusted by 10+ Hyderabad Businesses
+                </div>
+                <h1 class="hero-title animate-in">
+                    Your leads are dying while
+                    <span class="gradient-text">your team sleeps.</span>
+                </h1>
+                <p class="hero-subtitle animate-in">
+                    We build AI-powered WhatsApp bots and CRM automation that qualify, nurture, and convert your leads in <strong>under 30 seconds</strong> — 24/7, on autopilot. Built specifically for Hyderabad's real estate, healthcare, and education sectors.
+                </p>
+                <div class="hero-cta animate-in">
+                    <a href="#contact" class="btn btn-primary btn-lg">
+                        <span>Get Your Free Automation Audit</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </a>
+                    <a href="#how-it-works" class="btn btn-ghost btn-lg">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor"/></svg>
+                        <span>Watch Demo</span>
+                    </a>
+                </div>
+                <div class="hero-stats animate-in">
+                    <div class="stat">
+                        <span class="stat-number" data-target="30">0</span><span class="stat-suffix">sec</span>
+                        <span class="stat-label">Avg Response Time</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat">
+                        <span class="stat-number" data-target="3">0</span><span class="stat-suffix">x</span>
+                        <span class="stat-label">More Conversions</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat">
+                        <span class="stat-number" data-target="20">0</span><span class="stat-suffix">hrs</span>
+                        <span class="stat-label">Saved Per Week</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-visual animate-in">
+                <div class="chat-demo">
+                    <div class="chat-header">
+                        <div class="chat-avatar">🤖</div>
+                        <div>
+                            <div class="chat-name">AutomateHyd Bot</div>
+                            <div class="chat-status">● Online</div>
+                        </div>
+                    </div>
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="chat-msg bot">
+                            <p>Hi! 👋 Welcome to Prestige Towers. I'm here to help you find your dream home. What's your budget range?</p>
+                            <span class="msg-time">10:01 AM</span>
+                        </div>
+                        <div class="chat-msg user">
+                            <p>Around 80 lakhs to 1 crore</p>
+                            <span class="msg-time">10:01 AM</span>
+                        </div>
+                        <div class="chat-msg bot">
+                            <p>Great choice! 🏠 We have 3BHK units in that range at our Gachibowli project. When would you like to visit?</p>
+                            <span class="msg-time">10:01 AM</span>
+                        </div>
+                        <div class="chat-msg user">
+                            <p>This Saturday works</p>
+                            <span class="msg-time">10:02 AM</span>
+                        </div>
+                        <div class="chat-msg bot typing" id="typingIndicator">
+                            <div class="typing-dots"><span></span><span></span><span></span></div>
+                        </div>
+                        <div class="chat-msg bot final-msg" id="finalMsg" style="display:none;">
+                            <p>✅ Done! Your site visit is booked for Saturday, 11 AM. Our sales head Arjun will meet you at the site. I've sent the location pin and brochure to your WhatsApp. See you there!</p>
+                            <span class="msg-time">10:02 AM</span>
+                        </div>
+                    </div>
+                    <div class="chat-alert" id="chatAlert">
+                        <div class="alert-icon">🔔</div>
+                        <div class="alert-content">
+                            <strong>CRM Alert:</strong> Hot Lead — Site Visit Booked
+                            <span class="alert-tag">Score: 92/100</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Logos / Trust Bar -->
+    <section class="trust-bar">
+        <div class="container">
+            <p class="trust-label">Automation solutions for industries across Hyderabad</p>
+            <div class="trust-logos">
+                <div class="trust-item">🏗️ Real Estate</div>
+                <div class="trust-item">🏥 Healthcare</div>
+                <div class="trust-item">🎓 Education</div>
+                <div class="trust-item">🛒 D2C Brands</div>
+                <div class="trust-item">🏢 IT Services</div>
+                <div class="trust-item">🍽️ Food & Hospitality</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem Section -->
+    <section class="problem-section" id="problem">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">The Problem</span>
+                <h2>You're losing ₹5L+ every month<br><span class="gradient-text">to slow response times</span></h2>
+            </div>
+            <div class="problem-grid">
+                <div class="problem-card">
+                    <div class="problem-icon">⏰</div>
+                    <h3>2-4 Hour Response Time</h3>
+                    <p>Your sales team takes hours to respond to enquiries. By then, the lead has already called your competitor.</p>
+                    <div class="problem-stat">78% of buyers choose the first responder</div>
+                </div>
+                <div class="problem-card">
+                    <div class="problem-icon">📋</div>
+                    <h3>Manual Data Entry</h3>
+                    <p>Your team wastes 15+ hours/week copying leads from WhatsApp to spreadsheets. Leads fall through the cracks.</p>
+                    <div class="problem-stat">40% of leads never get a follow-up</div>
+                </div>
+                <div class="problem-card">
+                    <div class="problem-icon">🌙</div>
+                    <h3>Zero After-Hours Coverage</h3>
+                    <p>50% of enquiries come after 7 PM or on weekends. Your team is offline. Those leads are gone forever.</p>
+                    <div class="problem-stat">₹5L+ in lost monthly revenue</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services-section" id="services">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">What We Build</span>
+                <h2>AI systems that work<br><span class="gradient-text">while you sleep</span></h2>
+                <p class="section-desc">Every solution is custom-built for Hyderabad businesses. No generic templates.</p>
+            </div>
+            <div class="services-grid">
+                <div class="service-card featured">
+                    <div class="service-badge">Most Popular</div>
+                    <div class="service-icon">💬</div>
+                    <h3>WhatsApp Lead Qualification Bot</h3>
+                    <p>AI-powered chatbot that instantly engages every enquiry, asks qualifying questions, scores leads, and routes hot prospects to your sales team in real-time.</p>
+                    <ul class="service-features">
+                        <li>Instant response (under 30 seconds)</li>
+                        <li>Smart lead scoring (Hot/Warm/Cold)</li>
+                        <li>Auto CRM entry (no manual work)</li>
+                        <li>Multi-language support (Telugu + Hindi + English)</li>
+                    </ul>
+                    <div class="service-price">Starting ₹80,000</div>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">🔄</div>
+                    <h3>Automated Follow-Up System</h3>
+                    <p>Never lose a lead again. Smart drip sequences that nurture prospects with personalized messages, brochures, and site visit reminders.</p>
+                    <ul class="service-features">
+                        <li>7-day automated nurture sequence</li>
+                        <li>Personalized property recommendations</li>
+                        <li>One-click appointment booking</li>
+                        <li>Re-engagement for cold leads</li>
+                    </ul>
+                    <div class="service-price">Starting ₹60,000</div>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">📊</div>
+                    <h3>CRM & Analytics Dashboard</h3>
+                    <p>Real-time visibility into your entire sales pipeline. Know exactly which ads, channels, and messages are converting — and which are wasting money.</p>
+                    <ul class="service-features">
+                        <li>Live pipeline dashboard</li>
+                        <li>Ad spend vs. conversion tracking</li>
+                        <li>Automated weekly reports</li>
+                        <li>Team performance scorecards</li>
+                    </ul>
+                    <div class="service-price">Starting ₹50,000</div>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">⭐</div>
+                    <h3>Review & Reputation Manager</h3>
+                    <p>AI monitors your Google reviews 24/7, drafts personalized responses, and alerts you instantly to negative feedback before it damages your brand.</p>
+                    <ul class="service-features">
+                        <li>Real-time review monitoring</li>
+                        <li>AI-drafted response suggestions</li>
+                        <li>Negative review instant alerts</li>
+                        <li>Monthly reputation reports</li>
+                    </ul>
+                    <div class="service-price">Starting ₹40,000</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-section" id="how-it-works">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">How It Works</span>
+                <h2>From zero to automated<br><span class="gradient-text">in 7 days</span></h2>
+            </div>
+            <div class="steps-timeline">
+                <div class="step">
+                    <div class="step-number">01</div>
+                    <div class="step-content">
+                        <h3>Free Automation Audit</h3>
+                        <p>We analyze your current lead flow, response times, and conversion bottlenecks. You'll get a personalized report showing exactly where you're losing money — even if you don't hire us.</p>
+                        <span class="step-time">Day 1</span>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">02</div>
+                    <div class="step-content">
+                        <h3>Custom Bot Build</h3>
+                        <p>We design and build your AI automation system tailored to your exact workflow, team size, and customer journey. You approve every conversation flow before it goes live.</p>
+                        <span class="step-time">Days 2-5</span>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">03</div>
+                    <div class="step-content">
+                        <h3>Launch & Optimize</h3>
+                        <p>Your system goes live. We monitor performance daily for the first 2 weeks, fine-tuning responses and flows based on real conversations. Your team gets full training.</p>
+                        <span class="step-time">Days 6-7</span>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">04</div>
+                    <div class="step-content">
+                        <h3>Ongoing Support & Growth</h3>
+                        <p>Monthly retainer covers maintenance, updates, and continuous optimization. We add new features and improve conversion rates every month.</p>
+                        <span class="step-time">Ongoing</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Results Section -->
+    <section class="results-section" id="results">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Real Results</span>
+                <h2>What happens when AI handles<br><span class="gradient-text">your lead qualification</span></h2>
+            </div>
+            <div class="results-grid">
+                <div class="result-card">
+                    <div class="result-before-after">
+                        <div class="result-before">
+                            <span class="label">Before</span>
+                            <span class="value">2-4 hrs</span>
+                        </div>
+                        <div class="result-arrow">→</div>
+                        <div class="result-after">
+                            <span class="label">After</span>
+                            <span class="value gradient-text">28 sec</span>
+                        </div>
+                    </div>
+                    <p class="result-metric">Average Lead Response Time</p>
+                </div>
+                <div class="result-card">
+                    <div class="result-before-after">
+                        <div class="result-before">
+                            <span class="label">Before</span>
+                            <span class="value">2.1%</span>
+                        </div>
+                        <div class="result-arrow">→</div>
+                        <div class="result-after">
+                            <span class="label">After</span>
+                            <span class="value gradient-text">6.8%</span>
+                        </div>
+                    </div>
+                    <p class="result-metric">Lead-to-Visit Conversion Rate</p>
+                </div>
+                <div class="result-card">
+                    <div class="result-before-after">
+                        <div class="result-before">
+                            <span class="label">Before</span>
+                            <span class="value">15 hrs</span>
+                        </div>
+                        <div class="result-arrow">→</div>
+                        <div class="result-after">
+                            <span class="label">After</span>
+                            <span class="value gradient-text">0 hrs</span>
+                        </div>
+                    </div>
+                    <p class="result-metric">Manual Data Entry Per Week</p>
+                </div>
+            </div>
+            <!-- Testimonials -->
+            <div class="testimonials">
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">★★★★★</div>
+                    <p>"We were spending ₹8L/month on Facebook ads but our team took hours to respond. AutomateHyd's WhatsApp bot now responds in seconds. Our site visits doubled in the first month."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">RS</div>
+                        <div>
+                            <strong>Rajesh S.</strong>
+                            <span>Marketing Head, Premium Builders — Gachibowli</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">★★★★★</div>
+                    <p>"The automated follow-up system recovered leads we thought were dead. ₹45L worth of bookings came from re-engaged prospects in Q1 alone. Best investment we've made."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">PA</div>
+                        <div>
+                            <strong>Priya A.</strong>
+                            <span>Director, Elite Realty Group — Financial District</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing-section" id="pricing">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Pricing</span>
+                <h2>Simple, transparent pricing.<br><span class="gradient-text">No hidden costs.</span></h2>
+                <p class="section-desc">Every package includes setup, training, and ongoing support.</p>
+            </div>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <div class="pricing-name">Starter</div>
+                    <div class="pricing-desc">Perfect for small teams testing automation</div>
+                    <div class="pricing-amount">
+                        <span class="currency">₹</span>
+                        <span class="price">80,000</span>
+                        <span class="period">one-time setup</span>
+                    </div>
+                    <div class="pricing-monthly">+ ₹15,000/month maintenance</div>
+                    <ul class="pricing-features">
+                        <li class="included">WhatsApp Lead Qualification Bot</li>
+                        <li class="included">Google Sheets / Basic CRM Integration</li>
+                        <li class="included">Lead scoring (Hot/Warm/Cold)</li>
+                        <li class="included">Real-time Telegram/Email alerts</li>
+                        <li class="included">Team training session</li>
+                        <li class="excluded">Follow-up automation</li>
+                        <li class="excluded">Analytics dashboard</li>
+                        <li class="excluded">Review management</li>
+                    </ul>
+                    <a href="#contact" class="btn btn-outline btn-block">Get Started</a>
+                </div>
+                <div class="pricing-card popular">
+                    <div class="popular-badge">Best Value</div>
+                    <div class="pricing-name">Growth</div>
+                    <div class="pricing-desc">Full automation suite for scaling businesses</div>
+                    <div class="pricing-amount">
+                        <span class="currency">₹</span>
+                        <span class="price">1,50,000</span>
+                        <span class="period">one-time setup</span>
+                    </div>
+                    <div class="pricing-monthly">+ ₹25,000/month maintenance</div>
+                    <ul class="pricing-features">
+                        <li class="included">Everything in Starter</li>
+                        <li class="included">7-day automated follow-up sequences</li>
+                        <li class="included">Appointment booking system</li>
+                        <li class="included">HubSpot/Zoho CRM integration</li>
+                        <li class="included">Multi-language support (Tel/Hin/Eng)</li>
+                        <li class="included">Weekly performance reports</li>
+                        <li class="excluded">Review management</li>
+                        <li class="excluded">Custom analytics dashboard</li>
+                    </ul>
+                    <a href="#contact" class="btn btn-primary btn-block">Get Started</a>
+                </div>
+                <div class="pricing-card">
+                    <div class="pricing-name">Premium</div>
+                    <div class="pricing-desc">Enterprise-grade automation with full analytics</div>
+                    <div class="pricing-amount">
+                        <span class="currency">₹</span>
+                        <span class="price">2,50,000</span>
+                        <span class="period">one-time setup</span>
+                    </div>
+                    <div class="pricing-monthly">+ ₹40,000/month maintenance</div>
+                    <ul class="pricing-features">
+                        <li class="included">Everything in Growth</li>
+                        <li class="included">AI Review & Reputation Manager</li>
+                        <li class="included">Custom analytics dashboard</li>
+                        <li class="included">Ad spend ROI tracking</li>
+                        <li class="included">Team performance scorecards</li>
+                        <li class="included">Priority 24/7 support</li>
+                        <li class="included">Quarterly strategy reviews</li>
+                        <li class="included">Dedicated account manager</li>
+                    </ul>
+                    <a href="#contact" class="btn btn-outline btn-block">Get Started</a>
+                </div>
+            </div>
+            <div class="pricing-guarantee">
+                <span class="guarantee-icon">🛡️</span>
+                <p><strong>100% Money-Back Guarantee.</strong> If our system doesn't improve your lead response time within 30 days, you get a full refund. No questions asked.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section" id="faq">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">FAQ</span>
+                <h2>Common questions,<br><span class="gradient-text">straight answers</span></h2>
+            </div>
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <button class="faq-question" id="faq-q-1" aria-expanded="false">
+                        <span>How long does setup take?</span>
+                        <span class="faq-toggle">+</span>
+                    </button>
+                    <div class="faq-answer" id="faq-a-1">
+                        <p>Most systems are live within 5-7 business days. Simple WhatsApp bots can be deployed in as little as 3 days. We handle everything — you just approve the conversation flows.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" id="faq-q-2" aria-expanded="false">
+                        <span>Will this work with my existing CRM?</span>
+                        <span class="faq-toggle">+</span>
+                    </button>
+                    <div class="faq-answer" id="faq-a-2">
+                        <p>Yes! We integrate with HubSpot, Zoho, Salesforce, Google Sheets, and most popular CRMs. If you're using something custom, we'll build a connector for it.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" id="faq-q-3" aria-expanded="false">
+                        <span>Can the bot speak Telugu and Hindi?</span>
+                        <span class="faq-toggle">+</span>
+                    </button>
+                    <div class="faq-answer" id="faq-a-3">
+                        <p>Absolutely. Our AI bots support Telugu, Hindi, and English — and can auto-detect the customer's preferred language from their first message.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" id="faq-q-4" aria-expanded="false">
+                        <span>What if I don't have a WhatsApp Business API?</span>
+                        <span class="faq-toggle">+</span>
+                    </button>
+                    <div class="faq-answer" id="faq-a-4">
+                        <p>No problem. We'll set it up for you as part of the onboarding process. The API cost is included in your monthly maintenance fee.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" id="faq-q-5" aria-expanded="false">
+                        <span>What happens after the setup is complete?</span>
+                        <span class="faq-toggle">+</span>
+                    </button>
+                    <div class="faq-answer" id="faq-a-5">
+                        <p>Your monthly retainer covers ongoing maintenance, AI model tuning, bug fixes, and monthly optimization based on real conversation data. We continuously improve your bot's conversion rate.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA / Contact Section -->
+    <section class="contact-section" id="contact">
+        <div class="container">
+            <div class="contact-grid">
+                <div class="contact-content">
+                    <span class="section-tag">Let's Talk</span>
+                    <h2>Get your free<br><span class="gradient-text">automation audit</span></h2>
+                    <p>We'll analyze your current lead flow and show you exactly how much revenue you're leaving on the table — for free, with no obligation.</p>
+                    <div class="contact-benefits">
+                        <div class="benefit">
+                            <span class="benefit-icon">✅</span>
+                            <span>15-minute personalized audit call</span>
+                        </div>
+                        <div class="benefit">
+                            <span class="benefit-icon">✅</span>
+                            <span>Custom demo recorded for your business</span>
+                        </div>
+                        <div class="benefit">
+                            <span class="benefit-icon">✅</span>
+                            <span>Actionable report — even if you don't hire us</span>
+                        </div>
+                    </div>
+                    <div class="contact-direct">
+                        <a href="https://wa.me/919XXXXXXXXX?text=Hi%20Roni!%20I%20want%20a%20free%20automation%20audit%20for%20my%20business." class="whatsapp-btn" id="whatsappBtn">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                            Chat on WhatsApp
+                        </a>
+                        <span class="contact-or">or</span>
+                        <a href="tel:+919XXXXXXXXX" class="phone-link">📞 +91 9XXX XXX XXX</a>
+                    </div>
+                </div>
+                <div class="contact-form-wrapper">
+                    <form class="contact-form" id="contactForm" action="#" method="POST">
+                        <div class="form-group">
+                            <label for="name">Your Name</label>
+                            <input type="text" id="name" name="name" placeholder="Rajesh Kumar" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone / WhatsApp</label>
+                            <input type="tel" id="phone" name="phone" placeholder="+91 98765 43210" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="business">Business Type</label>
+                            <select id="business" name="business" required>
+                                <option value="" disabled selected>Select your industry</option>
+                                <option value="real-estate">Real Estate / Construction</option>
+                                <option value="healthcare">Healthcare / Hospital</option>
+                                <option value="education">Education / Coaching</option>
+                                <option value="d2c">D2C / E-Commerce</option>
+                                <option value="it-services">IT Services</option>
+                                <option value="food">Food & Hospitality</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Tell us about your biggest bottleneck</label>
+                            <textarea id="message" name="message" rows="3" placeholder="e.g., Our team takes 3+ hours to respond to enquiries from Facebook ads..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block btn-lg" id="submitBtn">
+                            Get My Free Audit →
+                        </button>
+                        <p class="form-disclaimer">No spam. No obligation. Just actionable insights.</p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <span class="logo-icon">⚡</span>
+                    <span class="logo-text">Automate<span class="logo-accent">Hyd</span></span>
+                    <p>AI-powered automation solutions for Hyderabad businesses. Built with ❤️ in HITEC City.</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-col">
+                        <h4>Services</h4>
+                        <a href="#services">WhatsApp Bots</a>
+                        <a href="#services">CRM Automation</a>
+                        <a href="#services">Lead Qualification</a>
+                        <a href="#services">Review Management</a>
+                    </div>
+                    <div class="footer-col">
+                        <h4>Company</h4>
+                        <a href="#how-it-works">How It Works</a>
+                        <a href="#results">Results</a>
+                        <a href="#pricing">Pricing</a>
+                        <a href="#contact">Contact</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 AutomateHyd. All rights reserved.</p>
+                <p>📍 HITEC City, Hyderabad, Telangana</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
