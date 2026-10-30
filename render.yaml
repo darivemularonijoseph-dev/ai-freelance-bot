@@ -1,14 +1,18 @@
 services:
   - type: web
-    name: automatehyd-telugu-voice-agent
+    name: antigravity-money-machine-bot
     env: python
     plan: free
     buildCommand: pip install -r requirements.txt
-    startCommand: python voice_agent_server.py
+    startCommand: python -u bot_listener_v2.py
     envVars:
-      - key: GEMINI_API_KEY
-        sync: false
       - key: BOT_TOKEN
         sync: false
       - key: CHAT_ID
         sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: PYTHONUNBUFFERED
+        value: "1"
+      - key: PYTHONIOENCODING
+        value: "utf-8"

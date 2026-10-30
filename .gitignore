@@ -6,3 +6,10 @@ env/
 *.log
 phone_bundle.zip
 .env
+config.json
+captured_leads.json
+cloudflared.exe
+test_clean.mp3
+*.mp3
+setup_j7max.sh
+setup_phone.sh
